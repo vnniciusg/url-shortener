@@ -1,6 +1,11 @@
 "use client";
 
+import { useShortUrlModal } from "@/shared/hooks/useShortUrl";
 import { Button } from "./Button";
+import axios from "axios";
+import { ShortUrlModal } from "./Modal/shortUrlModal";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 interface InputProps {
   value: string;
@@ -10,8 +15,25 @@ interface InputProps {
 }
 
 export const Input = ({ value, label, setValue, placeholder }: InputProps) => {
+  const useShortUrl = useShortUrlModal();
+
+  const [responseData, setResponseData] = useState("");
+
   const handleChange = (event: React.ChangeEvent<any>) => {
     setValue(event.target.value);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(`/api/short-url`, {
+        url: value,
+      });
+      setResponseData(response.data.message.urlShorter);
+      useShortUrl.onOpen();
+      setValue("");
+    } catch (err: any) {
+      toast(err.response.data.message, { autoClose: 2000, type: "error" });
+    }
   };
 
   return (
@@ -29,8 +51,9 @@ export const Input = ({ value, label, setValue, placeholder }: InputProps) => {
           value={value}
           required
         />
-        <Button label="Encurtar" />
+        <Button label="Encurtar" onClick={handleSubmit} />
       </div>
+      <ShortUrlModal url={responseData} />
     </div>
   );
 };
