@@ -2,10 +2,13 @@
 
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Nunito } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const inter = Inter({ subsets: ["latin"] });
+import * as dotenv from "dotenv";
+dotenv.config();
+
+const font = Nunito({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={font.className}>
         <ToastContainer />
         <div className="bg-neutral-100">{children}</div>
       </body>

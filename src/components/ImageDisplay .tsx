@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createClient } from "pexels";
 
 interface ImageDisplayProps {
   loading: boolean;
@@ -9,16 +10,27 @@ interface ImageDisplayProps {
 }
 
 export const ImageDisplay = ({ loading, setLoading }: ImageDisplayProps) => {
+  const [photos, setPhoto] = useState<string | null>(null);
+
+  const key = process.env.NEXT_PUBLIC_PEXELS_API;
+
   useEffect(() => {
-    setLoading(false);
+    const fetchRandomPhoto = async () => {
+      const client = await createClient(key as string);
+      try {
+        const response = await client.photos.random();
+        setPhoto(response.src.landscape);
+      } catch (err: any) {
+        console.error("Erro ao buscar fotos: ", err);
+      }
+    };
+
+    fetchRandomPhoto();
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
   }, []);
 
-  const getRandomImageUrl = () => {
-    const randomValue = Math.random();
-    return `https://picsum.photos/1200/800?random=${randomValue}`;
-  };
-
-  const imageUrl = getRandomImageUrl();
   return (
     <div className="hidden md:block w-[75%] max-md:w-[70vw] bg-white h-screen">
       {loading ? (
@@ -27,7 +39,7 @@ export const ImageDisplay = ({ loading, setLoading }: ImageDisplayProps) => {
         </div>
       ) : (
         <Image
-          src={imageUrl}
+          src={photos || ""}
           alt="Imagem Aleatória"
           width={1200}
           height={800}
