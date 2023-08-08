@@ -5,8 +5,13 @@ const generateShortId = customAlphabet(
   6
 );
 
-const base = "http://localhost:3000";
+let BASE_URL: string;
 
+if (process.env.NODE_ENV !== "production") {
+  BASE_URL = process.env.BASE_URL_DEVELEPOMENT as string;
+}
+
+BASE_URL = process.env.BASE_URL_PRODUCTION as string;
 export interface ShortLinkData {
   newShortUrl: string;
   shortId?: string;
@@ -15,7 +20,7 @@ export interface ShortLinkData {
 export const generateShortLink = async (): Promise<ShortLinkData> => {
   try {
     const urlId = generateShortId();
-    const newShortUrl = `${base}/${urlId}`;
+    const newShortUrl = `${BASE_URL}/${urlId}`;
     return {
       newShortUrl: newShortUrl,
       shortId: urlId,
