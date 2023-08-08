@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ToastContainer />
-        {children}
+        <div className="bg-neutral-100">{children}</div>
       </body>
     </html>
   );

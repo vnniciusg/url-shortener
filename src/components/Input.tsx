@@ -41,7 +41,7 @@ export const Input = ({ value, label, setValue, placeholder }: InputProps) => {
       <label htmlFor="search" className="text-lg font-semibold ">
         {label}
       </label>
-      <div className="relative w-[300px] md:w-[600px]">
+      <div className="relative w-[350px]  md:w-[500px]">
         <input
           type="search"
           id="search"
