@@ -19,7 +19,14 @@ export const ImageDisplay = ({ loading, setLoading }: ImageDisplayProps) => {
       const client = await createClient(key as string);
       try {
         const response = await client.photos.random();
-        setPhoto(response.src.landscape);
+        if ("src" in response && "landscape" in response.src) {
+          setPhoto(response.src.landscape);
+        } else {
+          console.error(
+            "Resposta inválida ou ausente da propriedade 'src.landscape'.",
+            response
+          );
+        }
       } catch (err: any) {
         console.error("Erro ao buscar fotos: ", err);
       }
